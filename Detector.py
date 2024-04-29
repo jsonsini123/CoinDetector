@@ -2,7 +2,7 @@ import cv2
 import numpy as np 
 
 # Read image. 
-img = cv2.imread('eyes.jpg', cv2.IMREAD_COLOR) 
+img = cv2.imread('download.jpg', cv2.IMREAD_COLOR) 
 
 # Convert to grayscale. 
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) 
@@ -13,7 +13,7 @@ gray_blurred = cv2.blur(gray, (3, 3))
 # Apply Hough transform on the blurred image. 
 detected_circles = cv2.HoughCircles(gray_blurred, 
 				cv2.HOUGH_GRADIENT, 1, 20, param1 = 50, 
-			param2 = 30, minRadius = 1, maxRadius = 40) 
+			param2 = 30, minRadius = 1, maxRadius = 200) 
 
 # Draw circles that are detected. 
 if detected_circles is not None: 
