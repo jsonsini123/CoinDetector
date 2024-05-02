@@ -6,15 +6,6 @@ from mediapipe.framework.formats import landmark_pb2
 
 class Scan:
 	def __init__(self):
-		# # Read image. 
-		# self.img = cv2.imread('lots.jpg', cv2.IMREAD_COLOR) 
-
-		# # Convert to grayscale. 
-		# self.gray = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY) 
-
-		# # Blur using 3 * 3 kernel. 
-		# self.gray_blurred = cv2.blur(self.gray, (3, 3)) 
-
 		self.num_pennies = 0
 
 		self.num_dimes = 0
@@ -24,7 +15,7 @@ class Scan:
 		self.num_nickels = 0
 
 		# Create video
-		self.video = cv2.VideoCapture(1)
+		self.video = cv2.VideoCapture(0)
 
 	def evaluate(self, image):
 		# Convert to grayscale. 
@@ -36,12 +27,12 @@ class Scan:
 		# Apply Hough transform on the blurred image. 
 		detected_circles = cv2.HoughCircles(self.gray,
 								cv2.HOUGH_GRADIENT,
-								minDist=70,
+								minDist=90,
 								dp=1.1,
 								param1=150,
 								param2=95,
-								minRadius=6,
-								maxRadius=150)
+								minRadius=45,
+								maxRadius=130)
 
 		# Draw circles that are detected. 
 		if detected_circles is not None: 
@@ -52,10 +43,14 @@ class Scan:
 
 			for pt in detected_circles[0, :]: 
 				a, b, r = pt[0], pt[1], pt[2] 
-				if r < 110 and r > 90:
+				if r < 96 and r > 84:
 					self.num_pennies += 1
-				if r > 70 and r < 80:
+				if r > 65 and r < 84:
 					self.num_dimes += 1
+				if r > 95 and r < 103:
+					self.num_nickels += 1
+				if r > 103:
+					self.num_quarters += 1
 				# Draw the circumference of the circle. 
 				cv2.circle(image, (a, b), r, (0, 255, 0), 2) 
 			
@@ -64,9 +59,14 @@ class Scan:
 			cv2.putText(image, "Number of coins: " + str(len(detected_circles[0])), (20,80), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
 			cv2.imshow("Detected Circle", image) 
 			cv2.waitKey(0) 
+		else:
+			cv2.putText(image, "No Coins Detected", (20,80), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
+			cv2.imshow("Detected Circle", image) 
+			cv2.waitKey(0) 
 
 
 	def run(self):
+		frame = None
 		while self.video.isOpened():
 			# Get the current frame
 			frame = self.video.read()[1]
@@ -74,27 +74,30 @@ class Scan:
 			# Convert it to an RGB image
 			image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
-			# The image comes mirored - flip it
-			image = cv2.flip(image, 1)
-
 			#Guides
 			cv2.putText(image, "Place Penny in Green Circle to Scale. Press 'q' to evaluate image", (400,600), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
-			cv2.circle(image, (450, 600), 95, (0, 255, 0), 2)
+			cv2.circle(image, (450, 600), 94, (0, 255, 0), 2)
 
 			# Change the color of the frame back
 			image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 			cv2.imshow('test', image)
+
+			key = cv2.waitKey(50) & 0xFF
 	
 			# Break the loop if the user presses 'q'
-			if cv2.waitKey(50) & 0xFF == ord('q'):
+			if key == ord('q'):
 				break
 
 
 		self.video.release()
 		cv2.destroyAllWindows()
+		# Flip image back
 		return(frame)
 
 if __name__ == "__main__":        
-    g = Scan()
-    g.evaluate(g.run())
+	g = Scan()
+	img = g.run()
+	# cv2.imshow("Image", img)
+	# cv2.waitKey(0)
+	g.evaluate(img)
 
