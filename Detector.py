@@ -75,8 +75,8 @@ class Scan:
 			image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
 			#Guides
-			cv2.putText(image, "Place Penny in Green Circle to Scale. Press 'q' to evaluate image", (400,600), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
-			cv2.circle(image, (450, 600), 94, (0, 255, 0), 2)
+			cv2.putText(image, "Place Penny in Green Circle to Scale. Press 'q' to evaluate image", (400,500), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
+			cv2.circle(image, (950, 650), 94, (0, 255, 0), 2)
 
 			# Change the color of the frame back
 			image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
