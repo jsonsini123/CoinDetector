@@ -60,7 +60,7 @@ class Scan:
 			cv2.imshow("Detected Circle", image) 
 			cv2.waitKey(0) 
 		else:
-			cv2.putText(image, "No Coins Detected", (20,80), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
+			cv2.putText(image, "No Coins Detected", (20,450), cv2.FONT_HERSHEY_SIMPLEX, 6, (255, 0, 0), 2)
 			cv2.imshow("Detected Circle", image) 
 			cv2.waitKey(0) 
 
