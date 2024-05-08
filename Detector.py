@@ -27,11 +27,11 @@ class Scan:
 		# Apply Hough transform on the blurred image. 
 		detected_circles = cv2.HoughCircles(self.gray,
 								cv2.HOUGH_GRADIENT,
-								minDist=90,
+								minDist=60,
 								dp=1.1,
 								param1=150,
 								param2=95,
-								minRadius=45,
+								minRadius=40,
 								maxRadius=130)
 
 		# Draw circles that are detected. 
@@ -43,11 +43,11 @@ class Scan:
 
 			for pt in detected_circles[0, :]: 
 				a, b, r = pt[0], pt[1], pt[2] 
-				if r < 96 and r > 84:
+				if r < 93 and r > 84:
 					self.num_pennies += 1
 				if r > 65 and r < 84:
 					self.num_dimes += 1
-				if r > 95 and r < 103:
+				if r > 93 and r < 103:
 					self.num_nickels += 1
 				if r > 103:
 					self.num_quarters += 1
@@ -76,7 +76,7 @@ class Scan:
 
 			#Guides
 			cv2.putText(image, "Place Penny in Green Circle to Scale. Press 'q' to evaluate image", (400,500), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
-			cv2.circle(image, (950, 650), 94, (0, 255, 0), 2)
+			cv2.circle(image, (950, 650), 92, (0, 255, 0), 2)
 
 			# Change the color of the frame back
 			image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
