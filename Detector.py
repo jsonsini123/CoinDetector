@@ -6,6 +6,7 @@ from mediapipe.framework.formats import landmark_pb2
 
 class Scan:
 	def __init__(self):
+		# Initiate coin amounts
 		self.num_pennies = 0
 
 		self.num_dimes = 0
@@ -39,10 +40,13 @@ class Scan:
 
 			# Convert the circle parameters a, b and r to integers. 
 			detected_circles = np.uint16(np.around(detected_circles)) 
+
+			# Print detected values
 			print(len(detected_circles))
 
 			for pt in detected_circles[0, :]: 
 				a, b, r = pt[0], pt[1], pt[2] 
+				# Compare radius to determine coin
 				if r < 93 and r > 84:
 					self.num_pennies += 1
 				if r > 65 and r < 84:
@@ -54,12 +58,16 @@ class Scan:
 				# Draw the circumference of the circle. 
 				cv2.circle(image, (a, b), r, (0, 255, 0), 2) 
 			
+			# Calculate how much money the coins add to
 			total_money = (self.num_dimes * 10 + self.num_pennies + self.num_nickels * 5 + self.num_quarters * 25) / 100
+			
+			# Print out info gathered
 			cv2.putText(image, "Total dollars: " + str(total_money), (20,40), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
 			cv2.putText(image, "Number of coins: " + str(len(detected_circles[0])), (20,80), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
 			cv2.imshow("Detected Circle", image) 
 			cv2.waitKey(0) 
 		else:
+			# If there are no coins inform user
 			cv2.putText(image, "No Coins Detected", (20,450), cv2.FONT_HERSHEY_SIMPLEX, 6, (255, 0, 0), 2)
 			cv2.imshow("Detected Circle", image) 
 			cv2.waitKey(0) 
